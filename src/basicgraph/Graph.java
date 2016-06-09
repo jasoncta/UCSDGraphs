@@ -25,7 +25,7 @@ public abstract class Graph {
 
 	private int numVertices;
 	private int numEdges;
-	////
+	
 	//optional association of String labels to vertices 
 	private Map<Integer,String> vertexLabels;
 	
