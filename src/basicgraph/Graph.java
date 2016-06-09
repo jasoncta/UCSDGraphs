@@ -239,7 +239,7 @@ public abstract class Graph {
 
 	
 	public static void main (String[] args) {
-		GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		//GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
 		
 
 		// For testing of Part 1 functionality
@@ -267,6 +267,19 @@ public abstract class Graph {
 		System.out.println(airportGraph);
 		System.out.println("Observe most degrees are small (1-30), eight are over 100.");
 		System.out.println("****");
+		
+		// Hollywood test
+		
+		System.out.println("****");
+		System.out.println("Roads / intersections:");
+		GraphAdjList hollywoodGraph = new GraphAdjList();
+		GraphLoader.loadRoadMap("data/maps/hollywood_large.map", hollywoodGraph);
+		System.out.println(hollywoodGraph);
+		
+		System.out.println("Observe all degrees are <= 9.");
+		System.out.println("****");
+
+		System.out.println("\n****");
 		
 		//For testing Part 2 functionality
 		// Test your distance2 code here.
