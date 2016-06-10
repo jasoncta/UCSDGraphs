@@ -3,3 +3,7 @@
 /DijkstraGrader.class
 /MapGraph.class
 /SearchGrader.class
+/Vertex.class
+/Edge.class
+/VertexNode.class
+/EdgeNode.class
