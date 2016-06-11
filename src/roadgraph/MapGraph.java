@@ -10,9 +10,13 @@ package roadgraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
@@ -26,7 +30,7 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 2
+	// Stores vertices and corresponding edges into a hashmap
 	private Map<GeographicPoint, ArrayList<EdgeNode>> mapList;
 	private int numVertices;
 	private int numEdges;
@@ -37,7 +41,7 @@ public class MapGraph {
 	 */
 	public MapGraph()
 	{
-		// TODO: Implement in this constructor in WEEK 2
+		// Initialize variables 
 		mapList = new HashMap<GeographicPoint, ArrayList<EdgeNode>>();
 		numVertices = 0;
 		numEdges = 0;
@@ -49,7 +53,6 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		//TODO: Implement this method in WEEK 2
 		return this.numVertices;
 	}
 	
@@ -59,7 +62,6 @@ public class MapGraph {
 	 */
 	public Set<GeographicPoint> getVertices()
 	{
-		//TODO: Implement this method in WEEK 2
 		return mapList.keySet();
 	}
 	
@@ -69,7 +71,6 @@ public class MapGraph {
 	 */
 	public int getNumEdges()
 	{
-		//TODO: Implement this method in WEEK 2
 		return this.numEdges;
 	}
 
@@ -84,10 +85,11 @@ public class MapGraph {
 	 */
 	public boolean addVertex(GeographicPoint location)
 	{
-		// TODO: Implement this method in WEEK 2
+		// Will return false if duplicate key is added to hashmap of vertices
 		if (mapList.containsKey(location)){
 			return false;
 		}
+		// Puts vertex into map and initializes edgenodes 
 		ArrayList<EdgeNode> edges = new ArrayList<EdgeNode>();
 		mapList.put(location, edges);
 		numVertices++;
@@ -109,10 +111,11 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 
-		//TODO: Implement this method in WEEK 2
+		// Throws an exception if start-point or end-point of the edge do not belong to a vertex that has been added already
 		if (!mapList.containsKey(to) || !mapList.containsKey(from)) {
 			throw new IllegalArgumentException("edge endpoints not in graph");
 		}
+		// Throws an exception if any of the field values of the edge are invalid
 		if (from == null || to == null || roadName == null || roadType == null || length <= 0) {
 			throw new IllegalArgumentException("inputs contain null value");
 		}
@@ -134,6 +137,7 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal) {
 		// Dummy variable for calling the search algorithms
         Consumer<GeographicPoint> temp = (x) -> {};
+        
         return bfs(start, goal, temp);
 	}
 	
@@ -146,16 +150,67 @@ public class MapGraph {
 	 *   path from start to goal (including both start and goal).
 	 */
 	public List<GeographicPoint> bfs(GeographicPoint start, 
-			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
+			GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
-		
+
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-
+		
+		// Initialize queue
+		Queue<GeographicPoint> q = new LinkedList<GeographicPoint>();
+		// Initialize visited hashset
+		HashSet<GeographicPoint> visited = new HashSet<GeographicPoint>();
+		// Initialize parent hashmap to store path
+		Map<GeographicPoint, GeographicPoint> parent = new HashMap<GeographicPoint, GeographicPoint>();
+		// Adds start to queue and visited 
+		q.add(start);
+		visited.add(start);
+		// Iterates through the queue while its not empty
+		while(!q.isEmpty()) {
+			GeographicPoint curr = q.remove();
+			// For front-end visualization
+			nodeSearched.accept(curr);
+			// Goal is found when entering this if statement
+			if (curr.equals(goal)) {
+				return getBFSPath(start, goal, parent);
+			}
+			// Iterates through all neighbors of the current node
+			iterateNeighbors(curr, q, visited, parent);
+		}
+		// Path is not found
 		return null;
 	}
 	
+	private void iterateNeighbors(GeographicPoint curr, Queue<GeographicPoint> q ,
+			HashSet<GeographicPoint> visited, Map<GeographicPoint, GeographicPoint> parent) {
+		// Finds all the neighbors of the current node and added them to the queue, visited
+		for (EdgeNode en: mapList.get(curr)) {
+			if (!visited.contains(en.getTo())) {
+				visited.add(en.getTo());
+				parent.put(en.getTo(), curr);
+				q.add(en.getTo());
+			}
+		}
+	}
+	// Gets the path
+	private List<GeographicPoint> getBFSPath(GeographicPoint start, GeographicPoint goal, Map<GeographicPoint, GeographicPoint> parent) {
+		// Initialize the path
+		List<GeographicPoint> path = new ArrayList<GeographicPoint>();
+		// Adds goal node to path
+		path.add(goal);
+		GeographicPoint curr = parent.get(goal);
+		while (!curr.equals(start)){
+			// Adds current node to path
+			path.add(0, curr);
+			// Gets the parent of the current node
+			curr = parent.get(curr);
+			
+		}
+		// Adds start node to head of the path list
+		path.add(0, start);
+		return path;
+	}
+
 
 	/** Find the path from start to goal using Dijkstra's algorithm
 	 * 
@@ -242,6 +297,8 @@ public class MapGraph {
 		MapGraph theMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/testdata/simpletest.map", theMap);
+		System.out.println(theMap.getVertices());
+		System.out.println(theMap.bfs(new GeographicPoint(1,1), new GeographicPoint(8,-1)));
 		System.out.println("DONE.");
 		
 		// My tests
@@ -250,14 +307,19 @@ public class MapGraph {
 		GeographicPoint myP = new GeographicPoint(10,10);
 		GeographicPoint myF = new GeographicPoint(11,10);
 		GeographicPoint myL = new GeographicPoint(13,17);
+		GeographicPoint myE = new GeographicPoint(163,19);
 		
 		myMap.addVertex(myP);
 		myMap.addVertex(myF);
 		myMap.addVertex(myL);
+		myMap.addVertex(myE);
 		//System.out.print(myMap);
 		myMap.addEdge(myF, myP, "a", "b", 7);
+		myMap.addEdge(myP, myL, "a", "b", 7);
+		myMap.addEdge(myL, myE, "a", "b", 7);
 		System.out.println(myMap);
 		System.out.println(myMap.getVertices());
+		System.out.println(myMap.bfs(myF, myE));
 		
 		// You can use this method for testing.  
 		

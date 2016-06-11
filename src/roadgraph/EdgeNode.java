@@ -4,11 +4,11 @@ import geography.GeographicPoint;
 
 public class EdgeNode {
 	
-	GeographicPoint from;
-	GeographicPoint to;
-	String roadName;
-	String roadType;
-	double length;
+	private GeographicPoint from;
+	private GeographicPoint to;
+	private String roadName;
+	private String roadType;
+	private double length;
 	
 	public EdgeNode(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) {
