@@ -7,3 +7,6 @@
 /Edge.class
 /VertexNode.class
 /EdgeNode.class
+/MapEdge.class
+/MapNode.class
+/MapNodeComparator.class
