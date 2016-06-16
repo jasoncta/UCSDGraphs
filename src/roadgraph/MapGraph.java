@@ -293,7 +293,7 @@ public class MapGraph {
 		pq.add(startNode);
 		
 		while (!pq.isEmpty()) {
-			System.out.println(pq);
+			//System.out.println(pq);
 			MapNode curr = pq.poll();
 			//System.out.println(curr);
 			if (!visited.contains(curr)) {
@@ -309,8 +309,9 @@ public class MapGraph {
 				for (MapEdge m: edgeList) {
 					dist = dist + m.getLength();
 					//m.getEndNode().setDistance(dist);
+					//System.out.println("dist: " + dist + "<" + " length: " + m.getEndNode().getDistance());
 					if(!visited.contains(m.getEndNode()))	{
-						if(m.getLength() > dist){
+						if(m.getEndNode().getDistance() > dist){
 							m.getEndNode().setDistance(dist);
 							//System.out.println(m.getEndNode());
 							parent.put(m.getEndNode(), curr);
@@ -373,7 +374,7 @@ public class MapGraph {
 		GraphLoader.loadRoadMap("data/testdata/simpletest.map", theMap);
 		//System.out.println(theMap.getVertices());
 		System.out.println("dijkstra:" + theMap.dijkstra(new GeographicPoint(1,1), new GeographicPoint(8,-1)));
-		System.out.println(theMap.bfs(new GeographicPoint(1,1), new GeographicPoint(8,-1)));
+		//System.out.println(theMap.bfs(new GeographicPoint(1,1), new GeographicPoint(8,-1)));
 		System.out.println("DONE.");
 		
 		// You can use this method for testing.  
