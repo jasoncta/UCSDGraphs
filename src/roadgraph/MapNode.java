@@ -21,6 +21,7 @@ class MapNode
 		
 	/** the latitude and longitude of this node */
 	private GeographicPoint location;
+	private double distance;
 		
 	/** 
 	 * Create a new MapNode at a given Geographic location
@@ -30,6 +31,7 @@ class MapNode
 	{
 		location = loc;
 		edges = new HashSet<MapEdge>();
+		distance = 999999999;
 	}
 		
 	/**
@@ -105,7 +107,7 @@ class MapNode
 	@Override
 	public String toString()
 	{
-		String toReturn = "[NODE at location (" + location + ")";
+		String toReturn = "[NODE at location (" + location + ") Distance:" + getDistance();
 		toReturn += " intersects streets: ";
 		for (MapEdge e: edges) {
 			toReturn += e.getRoadName() + ", ";
@@ -123,6 +125,15 @@ class MapNode
 		}
 		toReturn += ")";
 		return toReturn;
+	}
+	
+	// Week3 additional methods
+	public void setDistance(Double d) {
+		this.distance = d;
+	}
+	
+	public double getDistance() {
+		return this.distance;
 	}
 
 }
