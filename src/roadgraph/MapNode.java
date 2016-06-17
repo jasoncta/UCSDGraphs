@@ -22,6 +22,7 @@ class MapNode
 	/** the latitude and longitude of this node */
 	private GeographicPoint location;
 	private double distance;
+	private double heuristic;
 		
 	/** 
 	 * Create a new MapNode at a given Geographic location
@@ -134,6 +135,14 @@ class MapNode
 	
 	public double getDistance() {
 		return this.distance;
+	}
+	
+	public void setHeuristic(Double h) {
+		this.heuristic = h;
+	}
+	
+	public double getHeuristic() {
+		return this.heuristic; 
 	}
 
 }
